@@ -1,32 +1,28 @@
-# Makefile para wifidump BOF — Adaptix
-CC     := x86_64-w64-mingw32-gcc
-STRIP  := x86_64-w64-mingw32-strip
-# -fno-stack-check -fno-stack-protector -mno-stack-arg-probe
-# eliminan la dependencia de __chkstk_ms en BOFs
-CFLAGS := -Wall -masm=intel -fno-stack-check -fno-stack-protector -mno-stack-arg-probe
-BINDIR := _bin
+CC64 = x86_64-w64-mingw32-gcc
+CC86 = i686-w64-mingw32-gcc
+STRIP = x86_64-w64-mingw32-strip
+CFLAGS = -Wall -masm=intel -fno-stack-check -fno-stack-protector -mno-stack-arg-probe -I src
+SRC = src/wifidump.c
 
-all: dirs \
-	$(BINDIR)/wifidump_enum.x64.o \
-	$(BINDIR)/wifidump_dump.x64.o \
-	$(BINDIR)/wifidump_auth.x64.o
+all: bof
 
-dirs:
-	mkdir -p $(BINDIR)
+bof: clean
+	@(mkdir _bin 2>/dev/null) && echo 'creating _bin directory' || echo '_bin directory exists'
 
-$(BINDIR)/wifidump_enum.x64.o: wifidump.c beacon.h
-	$(CC) $(CFLAGS) -DBOF_ENTRY_ENUM -o $@ -c wifidump.c
-	$(STRIP) --strip-unneeded $@
+	# ========================
+	# 64-bit builds
+	# ========================
+	@$(CC64) $(CFLAGS) -DBOF_ENTRY_ENUM -c $(SRC) -o _bin/wifidump_enum.x64.o && $(STRIP) --strip-unneeded _bin/wifidump_enum.x64.o && echo '[+] wifidump_enum (x64)' || echo '[!] wifidump_enum (x64)'
+	@$(CC64) $(CFLAGS) -DBOF_ENTRY_DUMP -c $(SRC) -o _bin/wifidump_dump.x64.o && $(STRIP) --strip-unneeded _bin/wifidump_dump.x64.o && echo '[+] wifidump_dump (x64)' || echo '[!] wifidump_dump (x64)'
+	@$(CC64) $(CFLAGS) -DBOF_ENTRY_AUTH -c $(SRC) -o _bin/wifidump_auth.x64.o && $(STRIP) --strip-unneeded _bin/wifidump_auth.x64.o && echo '[+] wifidump_auth (x64)' || echo '[!] wifidump_auth (x64)'
 
-$(BINDIR)/wifidump_dump.x64.o: wifidump.c beacon.h
-	$(CC) $(CFLAGS) -DBOF_ENTRY_DUMP -o $@ -c wifidump.c
-	$(STRIP) --strip-unneeded $@
+	# ========================
+	# 32-bit builds
+	# ========================
+	@$(CC86) $(CFLAGS) -DBOF_ENTRY_ENUM -c $(SRC) -o _bin/wifidump_enum.x86.o && echo '[+] wifidump_enum (x86)' || echo '[!] wifidump_enum (x86)'
+	@$(CC86) $(CFLAGS) -DBOF_ENTRY_DUMP -c $(SRC) -o _bin/wifidump_dump.x86.o && echo '[+] wifidump_dump (x86)' || echo '[!] wifidump_dump (x86)'
+	@$(CC86) $(CFLAGS) -DBOF_ENTRY_AUTH -c $(SRC) -o _bin/wifidump_auth.x86.o && echo '[+] wifidump_auth (x86)' || echo '[!] wifidump_auth (x86)'
 
-$(BINDIR)/wifidump_auth.x64.o: wifidump.c beacon.h
-	$(CC) $(CFLAGS) -DBOF_ENTRY_AUTH -o $@ -c wifidump.c
-	$(STRIP) --strip-unneeded $@
 
 clean:
-	rm -f $(BINDIR)/wifidump_enum.x64.o \
-	      $(BINDIR)/wifidump_dump.x64.o \
-	      $(BINDIR)/wifidump_auth.x64.o
+	@(rm -rf _bin)

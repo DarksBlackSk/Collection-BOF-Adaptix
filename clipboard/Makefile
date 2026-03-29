@@ -1,23 +1,31 @@
-# Makefile para clipboard BOF — Adaptix
-CC_x64  := x86_64-w64-mingw32-gcc
-CC_x86  := i686-w64-mingw32-gcc
-STRIP   := x86_64-w64-mingw32-strip
-STRIP86 := i686-w64-mingw32-strip
-CFLAGS  := -Wall -masm=intel
-BINDIR  := _bin
+CC64 = x86_64-w64-mingw32-gcc
+CC86 = i686-w64-mingw32-gcc
+STRIP64 = x86_64-w64-mingw32-strip
+STRIP86 = i686-w64-mingw32-strip
 
-all: dirs $(BINDIR)/clipboard.x64.o $(BINDIR)/clipboard.x86.o
+CFLAGS = -Wall -masm=intel -I src
 
-dirs:
-	mkdir -p $(BINDIR)
+SRC = src/clipboard.c
 
-$(BINDIR)/clipboard.x64.o: clipboard.c beacon.h
-	$(CC_x64) $(CFLAGS) -o $@ -c clipboard.c
-	$(STRIP) --strip-unneeded $@
+all: bof
 
-$(BINDIR)/clipboard.x86.o: clipboard.c beacon.h
-	$(CC_x86) $(CFLAGS) -o $@ -c clipboard.c
-	$(STRIP86) --strip-unneeded $@
+bof: clean
+	@(mkdir _bin 2>/dev/null) && echo 'creating _bin directory' || echo '_bin directory exists'
+
+	# ========================
+	# 64-bit build
+	# ========================
+	@$(CC64) $(CFLAGS) -c $(SRC) -o _bin/clipboard.x64.o && \
+	$(STRIP64) --strip-unneeded _bin/clipboard.x64.o && \
+	echo '[+] clipboard (x64)' || echo '[!] clipboard (x64)'
+
+	# ========================
+	# 32-bit build
+	# ========================
+	@$(CC86) $(CFLAGS) -c $(SRC) -o _bin/clipboard.x86.o && \
+	$(STRIP86) --strip-unneeded _bin/clipboard.x86.o && \
+	echo '[+] clipboard (x86)' || echo '[!] clipboard (x86)'
+
 
 clean:
-	rm -f $(BINDIR)/clipboard.x64.o $(BINDIR)/clipboard.x86.o
+	@(rm -rf _bin)
