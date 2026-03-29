@@ -602,7 +602,7 @@ cmd_edr_drv.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
 
 var cmd_edr_remote = ax.create_command("edr_remote",
     "Remote EDR enum via LsarLookupNames + SCM (services + kernel drivers) [NOISE: low-medium]",
-    "edr_remote 192.168.1.10\nedr_remote 192.168.1.10 -u DOMAIN\\\\user -p password");
+    "edr_remote 192.168.1.10, edr_remote 192.168.1.10 -u DOMAIN\\\\user -p password");
 
 cmd_edr_remote.addArgString("target", true, "Target IP or hostname (e.g. 192.168.1.10)");
 cmd_edr_remote.addArgFlagString("-u", "user", "DOMAIN\\user for explicit authentication (optional)", "");
