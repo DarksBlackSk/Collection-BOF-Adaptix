@@ -18,7 +18,7 @@ function _check_bof(id, path) {
 
 var _cmd_wifi_enum = ax.create_command(
     "enum",
-    "List WiFi profiles saved on the system. Requires high-integrity beacon. [NOISE: low]",
+    "List WiFi profiles saved on the system. [NOISE: low]",
     "wifi enum"
 );
 
@@ -31,7 +31,7 @@ _cmd_wifi_enum.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
 
 var _cmd_wifi_dump = ax.create_command(
     "dump",
-    "Retrieve the plaintext password from a saved WiFi profile. Requires high-integrity beacon. [NOISE: low]",
+    "Retrieve the plaintext password from a saved WiFi profile. [NOISE: low]",
     "wifi dump \"NetworkName\""
 );
 
@@ -93,7 +93,7 @@ _cmd_wifi_dump.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
 
 var _cmd_wifi_auth = ax.create_command(
     "auth",
-    "Connect to a WPA2-PSK network by registering a profile and calling WlanConnect. Requires high-integrity beacon. [NOISE: medium]",
+    "Connect to a WPA2-PSK network by registering a profile and calling WlanConnect. [NOISE: medium]",
     "wifi auth \"NetworkName\" \"password\""
 );
 
