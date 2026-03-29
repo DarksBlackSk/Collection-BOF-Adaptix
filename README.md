@@ -8,3 +8,15 @@ BOF collection for different scenarios
 ## Clipboard
 
 <img width="1447" height="263" alt="image" src="https://github.com/user-attachments/assets/8a72423d-158b-45dc-ba07-8e6ed35d55cc" />
+
+## EdrEnum-BOF
+
+<img width="1483" height="614" alt="image" src="https://github.com/user-attachments/assets/248b0934-b13d-4d99-8c38-0ca573612061" />
+
+
+## Keylogger-BOF
+
+
+<img width="1483" height="614" alt="image" src="https://github.com/user-attachments/assets/131e6b4b-067b-455d-93f3-d5be11cf8fb0" />
+
+
