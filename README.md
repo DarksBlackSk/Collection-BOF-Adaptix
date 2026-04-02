@@ -20,3 +20,6 @@ BOF collection for different scenarios
 <img width="1483" height="614" alt="image" src="https://github.com/user-attachments/assets/131e6b4b-067b-455d-93f3-d5be11cf8fb0" />
 
 
+## ghost_task
+
+<img width="1718" height="476" alt="image" src="https://github.com/user-attachments/assets/374cdf05-42bd-4bc7-ab00-d4a9256de114" />
