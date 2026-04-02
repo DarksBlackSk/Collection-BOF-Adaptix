@@ -1,4 +1,4 @@
-SUBDIRS := clipboard EdrEnum-BOF Keylogger-BOF wifi
+SUBDIRS := clipboard EdrEnum-BOF Keylogger-BOF wifi ghost_task
 .PHONY: all $(SUBDIRS) clean
 all: $(SUBDIRS)
 
