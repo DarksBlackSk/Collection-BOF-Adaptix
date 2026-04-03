@@ -1,4 +1,4 @@
-# GhostTask BOF — Adaptado para AdaptixC2
+# GhostTask BOF — Adapted for AdaptixC2
 
 Creates and deletes Windows scheduled tasks directly in the registry, without using the Task Scheduler API (COM/RPC). This avoids generating audit events 4698 (task created) and 4699 (task deleted).
 
