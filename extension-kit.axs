@@ -10,3 +10,4 @@ ax.script_load(path + "EdrEnum-BOF/edr.axs");
 ax.script_load(path + "Keylogger-BOF/keylog.axs");
 ax.script_load(path + "wifi/wifidump.axs");
 ax.script_load(path + "ghost_task/ghost_task.axs");
+ax.script_load(path + "sc_bof/svcmgr.axs");
