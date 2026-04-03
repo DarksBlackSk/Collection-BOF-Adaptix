@@ -135,4 +135,4 @@ var cmd_wifi = ax.create_command(
 cmd_wifi.addSubCommands([_cmd_wifi_enum, _cmd_wifi_dump, _cmd_wifi_auth]);
 
 var group_wifi = ax.create_commands_group("wifi", [cmd_wifi]);
-ax.register_commands_group(group_wifi, ["beacon", "gopher"], ["windows"], []);
+ax.register_commands_group(group_wifi, ["beacon", "gopher", "kharon"], ["windows"], []);
