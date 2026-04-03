@@ -87,6 +87,6 @@ var group_ghost = ax.create_commands_group("GhostTask-BOF", [
     cmd_ghost_add,
     cmd_ghost_delete
 ]);
-ax.register_commands_group(group_ghost, ["beacon", "gopher"], ["windows"], []);
+ax.register_commands_group(group_ghost, ["beacon", "gopher", "kharon"], ["windows"], []);
 
 ax.log("[GhostTask] Script cargado. Comandos: ghost_task_add | ghost_task_delete");

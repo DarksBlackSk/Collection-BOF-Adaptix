@@ -1143,9 +1143,9 @@ void AddScheduleTask(LPCSTR computerName, LPCSTR taskName, LPCSTR cmd, LPCSTR ar
         BeaconPrintf(CALLBACK_OUTPUT, "%-30s logon", "Schedule Type:");
 
     if (computerName == NULL)
-        BeaconPrintf(CALLBACK_OUTPUT, "%-30s GhostTask.exe localhost delete \"%s\"", "Task Deletion Command:", taskName);
+        BeaconPrintf(CALLBACK_OUTPUT, "%-30s ghost_task_delete -n \"%s\"", "Task Deletion Command:", taskName);
     else
-        BeaconPrintf(CALLBACK_OUTPUT, "%-30s GhostTask.exe %s delete \"%s\"", "Task Deletion Command:", computerName, taskName);
+        BeaconPrintf(CALLBACK_OUTPUT, "%-30s ghost_task_delete -n \"%s\"", "Task Deletion Command:", computerName, taskName);
 
     // Close key
     RegCloseKey(hKeyTree);
