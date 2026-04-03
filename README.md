@@ -23,3 +23,8 @@ BOF collection for different scenarios
 ## ghost_task
 
 <img width="1718" height="476" alt="image" src="https://github.com/user-attachments/assets/374cdf05-42bd-4bc7-ab00-d4a9256de114" />
+
+## sc_bof
+
+<img width="1505" height="703" alt="image" src="https://github.com/user-attachments/assets/89be03c4-ef34-48d4-a011-f9d4ec828963" />
+<img width="1505" height="644" alt="image" src="https://github.com/user-attachments/assets/de112781-1d7c-41c8-864f-cd483c2be677" />
