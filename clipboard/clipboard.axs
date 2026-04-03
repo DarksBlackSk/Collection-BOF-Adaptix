@@ -52,4 +52,4 @@ cmd_clipboard.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
 });
 
 var group_clipboard = ax.create_commands_group("clipboard", [cmd_clipboard]);
-ax.register_commands_group(group_clipboard, ["beacon", "gopher"], ["windows"], []);
+ax.register_commands_group(group_clipboard, ["beacon", "gopher", "kharon"], ["windows"], []);
