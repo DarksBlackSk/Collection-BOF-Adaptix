@@ -68,7 +68,7 @@ _cmd_wifi_dump.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
         return task;
     };
     ax.execute_alias_hook(id, cmdline,
-        `execute bof -a ${bof_path} ${bof_params}`,
+        `execute bof ${bof_path} ${bof_params}`,
         "Task: WiFi dump '" + profile + "' (BOF)", hook);
 });
 
@@ -99,7 +99,7 @@ _cmd_wifi_auth.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
         return;
     }
     ax.execute_alias(id, cmdline,
-        `execute bof -a ${bof_path} ${bof_params}`,
+        `execute bof ${bof_path} ${bof_params}`,
         "Task: WiFi auth -> '" + ssid + "' (BOF)", null);
 });
 
@@ -107,7 +107,7 @@ _cmd_wifi_auth.setPreHook(function (id, cmdline, parsed_json, ...parsed_lines) {
 var cmd_wifi = ax.create_command(
     "wifi",
     "WiFi enumeration, dump & authentication via WLAN API.",
-    "wifi enum\nwifi dump \"NetworkName\"\nwifi auth \"NetworkName\" \"password\"");
+    "wifi enum | wifi dump \"NetworkName\" | wifi auth \"NetworkName\" \"password\"");
 cmd_wifi.addSubCommands([_cmd_wifi_enum, _cmd_wifi_dump, _cmd_wifi_auth]);
 
 var group_wifi = ax.create_commands_group("wifi", [cmd_wifi]);

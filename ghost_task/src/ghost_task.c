@@ -10,7 +10,6 @@ const char *DAYS[] = {"sunday", "monday", "tuesday", "wednesday", "thursday", "f
 const char *SCHEDULETYPES[] = {"second", "daily", "weekly", "logon"};
 
 
-#ifdef BOF
 // malloc
 WINBASEAPI void *__cdecl MSVCRT$malloc(size_t _Size);
 // isspace
@@ -99,7 +98,6 @@ typedef RPC_STATUS RPC_ENTRY (*RpcStringFreeA_t)(RPC_CSTR *String);
 #define UuidCreate ((UuidCreate_t)DynamicLoad("RPCRT4", "UuidCreate"))
 #define UuidToStringA ((UuidToStringA_t)DynamicLoad("RPCRT4", "UuidToStringA"))
 #define RpcStringFreeA ((RpcStringFreeA_t)DynamicLoad("RPCRT4", "RpcStringFreeA"))
-#endif
 char *my_strstr(char *haystack, char *needle)
 {
     if (!*needle)
@@ -178,7 +176,6 @@ void my_strncpy_s(char *dest, size_t destSize, const char *src, size_t count)
     }
     dest[i] = '\0';
 }
-#ifdef BOF
 BOOL ParseArguments(datap *parser, Arguments *arguments)
 {
     int arglen;
@@ -310,162 +307,6 @@ BOOL ParseArguments(datap *parser, Arguments *arguments)
     }
     return TRUE;
 }
-#else
-void printHelp()
-{
-    printf("Usage: GhostTask.exe <hostname/localhost> <operation> <taskname> <program> <argument> <username> <scheduletype> <time/second> <day>\n");
-    printf("- hostname/localhost: Remote computer name or \"localhost\".\n");
-    printf("- operation: add/delete\n");
-    printf("  - add: Create or modify a scheduled task using only registry keys. Requires restarting the \"Schedule\" service to load the task definition.\n");
-    printf("  - delete: Delete a scheduled task. Requires restarting the \"Schedule\" service to offload the task.\n");
-    printf("- taskname: Name of the scheduled task.\n");
-    printf("- program: Program to be executed.\n");
-    printf("- argument: Arguments for the program.\n");
-    printf("- username: User account under which the scheduled task will run.\n");
-    printf("- scheduletype: Supported triggers: second, daily, weekly, and logon.\n");
-    printf("- time/second (applicable for 'second', 'daily', and 'weekly' triggers):\n");
-    printf("  - For 'second' trigger: Specify the frequency in seconds for task execution.\n");
-    printf("  - For 'daily' and 'weekly' triggers: Specify the exact time (e.g., 22:30) for task execution.\n");
-    printf("- day (applicable for 'weekly' trigger): Days to execute the scheduled task (e.g., monday, thursday).\n");
-}
-bool ParseArguments(char **args, int arglen, Arguments *arguments)
-{
-    char *computerName;
-    char *computerNameL;
-    char *operation;
-    char *taskName;
-    char *program;
-    char *argument;
-    char *userName;
-    char *scheduleType;
-    char *time;
-    char *day;
-    int computerNameSize;
-    arguments->dayBitmap = 0;
-    if (arglen == 1)
-    {
-        printf("[-] No computer name (e.g., localhost/remote server hostname) provided.\n");
-        return false;
-    }
-    else if (arglen == 2)
-    {
-        printf("[-] No reg task operation (e.g., add/delete) provided.\n");
-        return false;
-    }
-    computerName = args[1];
-    operation = args[2];
-    arguments->computerName = computerName;
-    computerNameSize = strlen(computerName);
-    computerNameL = (char *)malloc(computerNameSize + 1);
-    memcpy(computerNameL, computerName, computerNameSize + 1);
-    if (strcmp("localhost", _strlwr(computerNameL)) == 0)
-        arguments->computerName = NULL;
-    free(computerNameL);
-    if (strcmp("add", _strlwr(operation)) == 0)
-    {
-        const char *missingArgs[] = {"task name", "program", "argument", "username for task execution", "schedule type"};
-        for (int i = 3, j = 0; i < 8; i++, j++)
-        {
-            if (arglen == i)
-            {
-                printf("[-] No %s provided.\n", missingArgs[j]);
-                return false;
-            }
-        }
-        taskName = args[3];
-        program = args[4];
-        argument = args[5];
-        userName = args[6];
-        scheduleType = _strlwr(args[7]);
-
-        arguments->taskName = taskName;
-        arguments->taskOperation = TaskAddOperation;
-        bool foundScheduleType = false;
-
-        for (int i = 0; i < sizeof(SCHEDULETYPES) / sizeof(SCHEDULETYPES[0]); i++)
-        {
-            if (strcmp(scheduleType, SCHEDULETYPES[i]) == 0)
-            {
-                arguments->scheduleType = i;
-                foundScheduleType = true;
-
-                // For "second", "daily", and "weekly" we need an execution time
-                if (i <= 2 && arglen == 8)
-                {
-                    printf("[-] Please provide scheduled task execution time (e.g., 22:15).\n");
-                    return false;
-                }
-
-                if (i == 2)
-                { // weekly
-                    time = args[8];
-                    if (arglen == 9)
-                    {
-                        printf("[-] Please provide days (e.g., monday,friday) for weekly execution.\n");
-                        return false;
-                    }
-                    day = _strlwr(args[9]);
-                    for (int j = 0; j < 7; j++)
-                    {
-                        if (strstr(day, DAYS[j]))
-                            arguments->dayBitmap += (1 << j);
-                    }
-                }
-                else if (i <= 2) // second or daily
-                    time = args[8];
-            }
-        }
-
-        if (!foundScheduleType)
-        {
-            printf("[-] Unknown schedule type '%s'.\n", scheduleType);
-            return false;
-        }
-
-        // Handle time
-        if (strcmp("second", scheduleType) == 0)
-        {
-            arguments->hour = 0;
-            arguments->minute = 0;
-            arguments->second = atoi(time);
-        }
-        else if (strcmp("daily", scheduleType) == 0 || strcmp("weekly", scheduleType) == 0)
-        {
-            char *token = strtok(time, ":");
-            arguments->hour = atoi(token);
-            token = strtok(NULL, ":");
-            arguments->minute = atoi(token);
-            if (arguments->hour > 23 || arguments->minute > 59)
-            {
-                printf("[-] Wrong time format (e.g., 15:30).");
-                return false;
-            }
-        }
-
-        arguments->program = program;
-        arguments->argument = argument;
-        arguments->userName = userName;
-    }
-    else if (strcmp("delete", operation) == 0)
-    {
-        if (arglen == 3)
-        {
-            printf("[-] No task name provided.\n");
-            return false;
-        }
-
-        taskName = args[3];
-        arguments->taskName = taskName;
-        arguments->taskOperation = TaskDeleteOperation;
-    }
-    else
-    {
-        printf("[-] Unknown command '%s'.\n", operation);
-        return false;
-    }
-    return true;
-}
-#endif
 
 BOOL CheckSystem()
 {
@@ -1245,4 +1086,3 @@ void DeleteScheduleTask(LPCSTR computerName, LPCSTR taskName)
     }
     BeaconPrintf(CALLBACK_OUTPUT, "Successfully deleted scheduled task (%s).\n", taskName);
 }
-
