@@ -154,7 +154,7 @@ static void op_list(SC_HANDLE hScm, const char *target, DWORD type_filter)
         return;
     }
 
-    internal_printf("=== Services on [%s] — %lu entries ===\n\n",
+    internal_printf("=== Services on [%s] - %lu entries ===\n\n",
         target, (unsigned long)dwReturned);
     internal_printf("%-40s %-14s %-12s %s\n",
         "NAME", "STATE", "TYPE", "DISPLAY NAME");
